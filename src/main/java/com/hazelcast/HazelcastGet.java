@@ -1,23 +1,36 @@
 package com.hazelcast;
 
-import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 
-public class HazelcastGet {
-	
-    public static void main(String[] args) throws InterruptedException {
+import java.util.Random;
 
-    	HazelcastInstance client = HazelcastClient.newHazelcastClient();
-        IMap<Object,Object> map = client.getMap("map");
+public class HazelcastGet {
+
+    public static void main(String[] args) {
         
-        int i = 0;
-        long start = System.nanoTime();
-        while(i<20000){
-            map.get(i);
-            i++;}
+    	HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+        IMap<Object, Object> map = hazelcastInstance.getMap("numbers");
+        Random random = new Random();
+
+        long startTimeGet20k = System.currentTimeMillis();
+        for (int i = 0; i < 20000; i++) {
+            int randomKey = random.nextInt(20000);
+            map.get(randomKey);
+        }
+        long endTimeGet20k = System.currentTimeMillis();
+        System.out.println("Time taken to get 20000 random numbers with Hazelcast: " + (endTimeGet20k - startTimeGet20k) + " ms");
+
+        long startTimeGet100k = System.currentTimeMillis();
         
-        CalculateTime time = new CalculateTime();
-        time.calculateTime(start);
+        for (int i = 0; i < 100000; i++) {
+            int randomKey = random.nextInt(100000);
+            map.get(randomKey);
+        }
+        long endTimeGet100k = System.currentTimeMillis();
+        System.out.println("Time taken to get 100000 random numbers with Hazelcast: " + (endTimeGet100k - startTimeGet100k) + " ms");
+
+        hazelcastInstance.shutdown();
     }
 }
