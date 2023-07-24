@@ -14,12 +14,7 @@ public class SelectMySql {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jdbc_test", "root", "12345");
             Statement stmt = con.createStatement();
-
-            Random rand = new Random();
-            for (int i = 0; i < 20000; i++) {
-                stmt.executeUpdate("INSERT INTO NUMBERS(num) VALUES(" + rand.nextInt(20000) + ")");
-            }
-
+            
             int dataSize20k = 20000;
             Random random = new Random();
             long start20k = System.currentTimeMillis();
@@ -34,7 +29,6 @@ public class SelectMySql {
             long elapsedTime20k = end20k - start20k;
             System.out.println("Time taken for selecting 20000 random numbers with MySQL: " + elapsedTime20k + " ms");
 
-            // Select 100000 random numbers and measure the time
             int dataSize100k = 100000;
             long start100k = System.currentTimeMillis();
             for (int i = 0; i < dataSize100k; i++) {
